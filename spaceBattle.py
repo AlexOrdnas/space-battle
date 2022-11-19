@@ -1,8 +1,6 @@
 import pygame
-import os
-pygame.font.init()
-pygame.mixer.init()
 
+pygame.init()
 WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Battle")
@@ -16,8 +14,8 @@ YELLOW = (255, 255, 0)
 
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
 
-HEALTH_FONT = pygame.font.SysFont('comicsans', 40)
-WINNER_FONT = pygame.font.SysFont('comicsans', 100)
+HEALTH_FONT = pygame.font.Font('Desktop/Visual Studio Code Files/Space Battle/font/rexlia rg.otf', 40)
+WINNER_FONT = pygame.font.Font('Desktop/Visual Studio Code Files/Space Battle/font/rexlia rg.otf', 90)
 
 FPS = 60
 VEL = 5
@@ -37,7 +35,6 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(
     RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
 SPACE = pygame.transform.scale(pygame.image.load("Desktop/Visual Studio COde Files/Space Battle/graphics/space.png"), (WIDTH, HEIGHT))
-
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
     WIN.blit(SPACE, (0, 0))
@@ -61,7 +58,6 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
 
     pygame.display.update()
 
-
 def yellow_handle_movement(keys_pressed, yellow):
     if keys_pressed[pygame.K_a] and yellow.x - VEL > 0:  # LEFT
         yellow.x -= VEL
@@ -72,7 +68,6 @@ def yellow_handle_movement(keys_pressed, yellow):
     if keys_pressed[pygame.K_s] and yellow.y + VEL + yellow.height < HEIGHT - 15:  # DOWN
         yellow.y += VEL
 
-
 def red_handle_movement(keys_pressed, red):
     if keys_pressed[pygame.K_LEFT] and red.x - VEL > BORDER.x + BORDER.width:  # LEFT
         red.x -= VEL
@@ -82,7 +77,6 @@ def red_handle_movement(keys_pressed, red):
         red.y -= VEL
     if keys_pressed[pygame.K_DOWN] and red.y + VEL + red.height < HEIGHT - 15:  # DOWN
         red.y += VEL
-
 
 def handle_bullets(yellow_bullets, red_bullets, yellow, red):
     for bullet in yellow_bullets:
@@ -101,14 +95,12 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
         elif bullet.x < 0:
             red_bullets.remove(bullet)
 
-
 def draw_winner(text):
     draw_text = WINNER_FONT.render(text, 1, WHITE)
     WIN.blit(draw_text, (WIDTH/2 - draw_text.get_width() /
                          2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
     pygame.time.delay(5000)
-
 
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)

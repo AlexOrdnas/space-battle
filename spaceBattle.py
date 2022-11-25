@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 WIDTH, HEIGHT = 900, 500
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Battle")
 iconImage = pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/spaceIcon.ico").convert_alpha()
 pygame.display.set_icon(iconImage)
@@ -32,25 +32,28 @@ YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESH
 RED_SPACESHIP_IMAGE = pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/spaceship_red.png").convert_alpha()
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
-SPACE = pygame.transform.scale(pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/space.png").convert_alpha(), (WIDTH, HEIGHT))
+SPACE = pygame.transform.scale(pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/space.png"), (WIDTH, HEIGHT))
+
+#SHOOT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/laser_shoot_sfx.mp3")
+#HIT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/explosion_sfx.mp3")
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
-
-    pygame.draw.rect(screen, BLACK, BORDER)
+    SCREEN.blit(SPACE, (0, 0))
+    pygame.draw.rect(SCREEN, BLACK, BORDER)
 
     red_health_text = HEALTH_FONT.render("Health: " + str(red_health) , 1, WHITE)
     yellow_health_text = HEALTH_FONT.render("Health: " +  str(yellow_health), 1, WHITE)
-    screen.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
-    screen.blit(yellow_health_text, (10, 10))
+    SCREEN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
+    SCREEN.blit(yellow_health_text, (10, 10))
 
-    screen.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
-    screen.blit(RED_SPACESHIP, (red.x, red.y))
+    SCREEN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
+    SCREEN.blit(RED_SPACESHIP, (red.x, red.y))
 
     for bullet in red_bullets:
-        pygame.draw.rect(screen, RED, bullet)
+        pygame.draw.rect(SCREEN, RED, bullet)
 
     for bullet in yellow_bullets:
-        pygame.draw.rect(screen, YELLOW, bullet)
+        pygame.draw.rect(SCREEN, YELLOW, bullet)
 
     pygame.display.update()
 
@@ -93,13 +96,13 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
 
 def draw_winner_red(text):
     draw_text = WINNER_FONT.render(text, 1, RED)
-    screen.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
+    SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
     pygame.time.delay(3000)
 
 def draw_winner_yellow(text):
     draw_text = WINNER_FONT.render(text, 1, YELLOW)
-    screen.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
+    SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
     pygame.time.delay(3000)
 
@@ -126,22 +129,30 @@ def main():
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height//2 - 2, 10, 5)
                     yellow_bullets.append(bullet)
+                    #SHOOT_SOUND()
 
                 if event.key == pygame.K_RCTRL and len(red_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(red.x, red.y + red.height//2 - 2, 10, 5)
                     red_bullets.append(bullet)
-                
+                    #SHOOT_SOUND()
+
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
 
                 if event.key == pygame.K_r:
                     main()
+                
+                if event.key == pygame.K_f:
+                    red_health = 10
+                    yellow_health = 10
 
             if event.type == RED_HIT:
                 red_health -= 1
+                #HIT_SOUND()
 
             if event.type == YELLOW_HIT:
                 yellow_health -= 1
+                #HIT_SOUND()
 
         winner_text = ""
         if red_health <= 0:

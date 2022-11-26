@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 pygame.init()
 WIDTH, HEIGHT = 900, 500
@@ -21,6 +22,7 @@ WINNER_FONT = pygame.font.Font("font/Lato-Bold.ttf", 100)
 FPS = 60
 VEL = 5
 BULLET_VEL = 10
+clock = pygame.time.Clock()
 MAX_BULLETS = 4
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 60, 40
 
@@ -30,6 +32,8 @@ HEAL_UP_Y = random.randint(50, 450)
 
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
+HEAL_UP_YELLOW = pygame.USEREVENT + 3
+HEAL_UP_RED = pygame.USEREVENT + 4
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load("graphics/spaceship_yellow.png").convert_alpha()
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)
@@ -39,13 +43,16 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMA
 
 SPACE = pygame.transform.scale(pygame.image.load("graphics/space.png"), (WIDTH, HEIGHT))
 
-#SHOOT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/laser_shoot_sfx.mp3")
-#HIT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/explosion_sfx.mp3")
-
 HEAL_UP_IMAGE = pygame.image.load("graphics/heal_up.png").convert_alpha()
 HEAL_UP = pygame.transform.scale(HEAL_UP_IMAGE, (HEAL_UP_WIDTH, HEAL_UP_HEIGHT))
 
-def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
+#SHOOT_SFX = pygame.mixer.Sound("sounds/laser_shoot_sfx.mp3")
+#HIT_SFX = pygame.mixer.Sound("sounds/explosion_sfx.mp3")
+#HEAL_UP_SFX = pygame.mixer.Sound("sounds/heal_up_sfx.mp3")
+#BACKGROUND_MUSIC = pygame.mixer.Sound("sounds/background_music.mp3")
+#BACKGROUND_MUSIC.play(loops = -1)
+
+def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health, heal):
     SCREEN.blit(SPACE, (0, 0))
     pygame.draw.rect(SCREEN, BLACK, BORDER)
 
@@ -54,9 +61,9 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
     SCREEN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
     SCREEN.blit(yellow_health_text, (10, 10))
 
+    SCREEN.blit(HEAL_UP, (heal.x, heal.y))
     SCREEN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     SCREEN.blit(RED_SPACESHIP, (red.x, red.y))
-    SCREEN.blit(HEAL_UP, (HEAL_UP_X, HEAL_UP_Y))
 
     for bullet in red_bullets:
         pygame.draw.rect(SCREEN, RED, bullet)
@@ -115,21 +122,29 @@ def draw_winner_yellow(text):
     pygame.display.update()
     pygame.time.delay(3000)
 
-def heal_up(heal_list, yellow, heal, yellow_health, red, red_health):
-    for i in heal_list:
-        if yellow.colliderect(heal):
-            heal_list.clear()
-            yellow_health += 5
+#def heal_up_movement(HEAL_UP_X, HEAL_UP_Y):
+    #time_counter = 0
+    #while True:
+        #time_counter = clock.tick()
+        #if time_counter > 3000:
+            #HEAL_UP_X = random.randint(50, 850)
+            #HEAL_UP_Y = random.randint(50, 450)
+            #time_counter = 0
 
-    for i in heal_list:
-        if red.colliderect(heal):
-            heal_list.clear()
-            red_health += 5
-
+def heal_up(heal_list, yellow, red):
+    for h in heal_list:
+        if h.colliderect(yellow):
+            pygame.event.post(pygame.event.Event(HEAL_UP_YELLOW))
+            heal_list.remove(h)
+            
+    for h in heal_list:
+        if h.colliderect(red):
+            pygame.event.post(pygame.event.Event(HEAL_UP_RED))
+            heal_list.remove(h)
 
 def main():
-    red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
-    yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    red = pygame.Rect(700, 250, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    yellow = pygame.Rect(100, 250, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
     heal = pygame.Rect(HEAL_UP_X, HEAL_UP_Y, HEAL_UP_WIDTH, HEAL_UP_HEIGHT)
 
     heal_list = [heal]
@@ -153,12 +168,12 @@ def main():
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height//2 - 2, 10, 5)
                     yellow_bullets.append(bullet)
-                    #SHOOT_SOUND()
+                    #SHOOT_SFX.play()
 
                 if event.key == pygame.K_RCTRL and len(red_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(red.x, red.y + red.height//2 - 2, 10, 5)
                     red_bullets.append(bullet)
-                    #SHOOT_SOUND()
+                    #SHOOT_SFX.play()
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
@@ -172,11 +187,19 @@ def main():
 
             if event.type == RED_HIT:
                 red_health -= 1
-                #HIT_SOUND()
+                #HIT_SFX.play()
 
             if event.type == YELLOW_HIT:
                 yellow_health -= 1
-                #HIT_SOUND()
+                #HIT_SFX.play()
+
+            if event.type == HEAL_UP_YELLOW:
+                yellow_health += 2
+                #HEAL_UP_SFX.play()
+
+            if event.type == HEAL_UP_RED:
+                red_health += 2
+                #HEAL_UP_SFX.play()
 
         winner_text = ""
         if red_health <= 0:
@@ -188,18 +211,17 @@ def main():
         if winner_text != "":
             if yellow_health <= 0:
                 draw_winner_red(winner_text)
-            
             if red_health <= 0:
                 draw_winner_yellow(winner_text)
-            break 
-        
+            break
+
         keys_pressed = pygame.key.get_pressed()
         yellow_handle_movement(keys_pressed, yellow)
         red_handle_movement(keys_pressed, red)
 
-        heal_up(heal_list, yellow, heal, yellow_health, red, red_health)
         handle_bullets(yellow_bullets, red_bullets, yellow, red)
-        draw_window(red, yellow, red_bullets, yellow_bullets,red_health, yellow_health)
+        #heal_up_movement(HEAL_UP_X, HEAL_UP_Y)
+        heal_up(heal_list, yellow, red)
+        draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health, heal)
 
-while True:
-    main()
+main()

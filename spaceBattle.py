@@ -4,7 +4,7 @@ pygame.init()
 WIDTH, HEIGHT = 900, 500
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Battle")
-iconImage = pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/spaceIcon.ico").convert_alpha()
+iconImage = pygame.image.load("graphics/spaceIcon.ico").convert_alpha()
 pygame.display.set_icon(iconImage)
 
 WHITE = (255, 255, 255)
@@ -14,8 +14,8 @@ YELLOW = (255, 255, 0)
 
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
 
-HEALTH_FONT = pygame.font.Font("Desktop/Visual Studio Code Files/Space Battle/font/Lato-Bold.ttf", 50)
-WINNER_FONT = pygame.font.Font("Desktop/Visual Studio Code Files/Space Battle/font/Lato-Bold.ttf", 100)
+HEALTH_FONT = pygame.font.Font("font/Lato-Bold.ttf", 50)
+WINNER_FONT = pygame.font.Font("font/Lato-Bold.ttf", 100)
 
 FPS = 60
 VEL = 5
@@ -26,13 +26,13 @@ SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 60, 40
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
 
-YELLOW_SPACESHIP_IMAGE = pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/spaceship_yellow.png").convert_alpha()
+YELLOW_SPACESHIP_IMAGE = pygame.image.load("graphics/spaceship_yellow.png").convert_alpha()
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)
 
-RED_SPACESHIP_IMAGE = pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/spaceship_red.png").convert_alpha()
+RED_SPACESHIP_IMAGE = pygame.image.load("graphics/spaceship_red.png").convert_alpha()
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
-SPACE = pygame.transform.scale(pygame.image.load("Desktop/Visual Studio Code Files/Space Battle/graphics/space.png"), (WIDTH, HEIGHT))
+SPACE = pygame.transform.scale(pygame.image.load("graphics/space.png"), (WIDTH, HEIGHT))
 
 #SHOOT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/laser_shoot_sfx.mp3")
 #HIT_SOUND = pygame.mixer.Sound("Desktop/Visual Studio Code Files/Space Battle/sounds/explosion_sfx.mp3")
@@ -177,5 +177,4 @@ def main():
 
         draw_window(red, yellow, red_bullets, yellow_bullets,red_health, yellow_health)
 
-while True:
-    main()
+main()

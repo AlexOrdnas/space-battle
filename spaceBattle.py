@@ -1,4 +1,5 @@
 import pygame
+from sys import exit
 
 pygame.init()
 WIDTH, HEIGHT = 900, 500
@@ -20,7 +21,7 @@ WINNER_FONT = pygame.font.Font("font/Lato-Bold.ttf", 100)
 
 FPS = 60
 VEL = 5
-BULLET_VEL = 10
+BULLET_VEL = 12
 MAX_BULLETS = 4
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 60, 40
 
@@ -39,6 +40,8 @@ SHOOT_SOUND = pygame.mixer.Sound("sounds/laser_shoot_sfx.wav")
 SHOOT_SOUND.set_volume(0.5)
 HIT_SOUND = pygame.mixer.Sound("sounds/explosion_sfx.wav")
 HIT_SOUND.set_volume(0.5)
+WIN_SOUND = pygame.mixer.Sound("sounds/win_sfx.wav")
+WIN_SOUND.set_volume(1)
 BACKGROUND_MUSIC = pygame.mixer.Sound("sounds/background_music.wav")
 BACKGROUND_MUSIC.set_volume(0.2)
 BACKGROUND_MUSIC.play(-1)
@@ -104,19 +107,19 @@ def draw_winner_red(text):
     draw_text = WINNER_FONT.render(text, 1, RED)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(1000)
+    pygame.time.delay(5000)
 
 def draw_winner_yellow(text):
     draw_text = WINNER_FONT.render(text, 1, YELLOW)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(1000)
+    pygame.time.delay(5000)
 
 def draw_winner_green(text):
     draw_text = WINNER_FONT.render(text, 1, GREEN)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(1000)
+    pygame.time.delay(5000)
 
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
@@ -136,6 +139,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
@@ -179,14 +183,17 @@ def main():
         if winner_text != "":
             if yellow_health <= 0:
                 BACKGROUND_MUSIC.stop()
+                WIN_SOUND.play()
                 draw_winner_red(winner_text)
             
             if red_health <= 0:
                 BACKGROUND_MUSIC.stop()
+                WIN_SOUND.play()
                 draw_winner_yellow(winner_text)
 
             if yellow_health <= 0 and red_health <= 0:
                 BACKGROUND_MUSIC.stop()
+                WIN_SOUND.play()
                 draw_winner_green(winner_text)
             break
         
@@ -197,5 +204,4 @@ def main():
         handle_bullets(yellow_bullets, red_bullets, yellow, red)
 
         draw_window(red, yellow, red_bullets, yellow_bullets,red_health, yellow_health)
-
-main()
+    main()

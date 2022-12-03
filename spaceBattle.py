@@ -18,9 +18,9 @@ MENU_BLUE = (51, 102, 153)
 
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
 
-HEALTH_FONT = pygame.font.Font("font/Lato-Bold.ttf", 40)
-WINNER_FONT = pygame.font.Font("font/Lato-Bold.ttf", 100)
-MENU_FONT = pygame.font.Font("font/Lato-Bold.ttf", 50)
+HEALTH_FONT = pygame.font.Font("font/ARCADE.TTF", 40)
+WINNER_FONT = pygame.font.Font("font/ARCADE.TTF", 150)
+MENU_FONT = pygame.font.Font("font/ARCADE.TTF", 50)
 
 FPS = 60
 VEL = 5
@@ -120,19 +120,19 @@ def draw_winner_red(text):
     draw_text = WINNER_FONT.render(text, 1, RED)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(6000)
 
 def draw_winner_yellow(text):
     draw_text = WINNER_FONT.render(text, 1, YELLOW)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(6000)
 
 def draw_winner_green(text):
     draw_text = WINNER_FONT.render(text, 1, GREEN)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT / 2 - draw_text.get_height() / 2))
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(6000)
 
 def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
@@ -176,7 +176,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         game_active = True
-                        pygame.time.delay(1000)
+                        pygame.time.delay(250)
                 
                 if game_active:
                     if event.type == pygame.KEYDOWN:
@@ -208,13 +208,13 @@ def main():
         if game_active:
             winner_text = ""
             if red_health <= 0:
-                winner_text = "YELLOW WON!"
+                winner_text = "YELLOW WON"
 
             if yellow_health <= 0:
-                winner_text = "RED WON!"
+                winner_text = "RED WON"
             
             if yellow_health <= 0 and red_health <= 0:
-                winner_text = "DRAW!"
+                winner_text = "DRAW"
 
             if winner_text != "":
                 if yellow_health <= 0:
@@ -245,14 +245,14 @@ def main():
         else:
             SCREEN.fill(MENU_BLUE)
             
-            top_menu_text = HEALTH_FONT.render("Welcome to SPACE BATTLE" , 1, MENU_WHITE)
+            top_menu_text = MENU_FONT.render("Welcome to SPACE BATTLE" , 1, MENU_WHITE)
             top_menu_text_rect = top_menu_text.get_rect(center = (WIDTH // 2, 40))
             SCREEN.blit(top_menu_text, top_menu_text_rect)
 
             SCREEN.blit(RED_SPACESHIP_ZOOM, RED_SPACESHIP_RECT)
             SCREEN.blit(YELLOW_SPACESHIP_ZOOM, YELLOW_SPACESHIP_RECT)
             
-            bottom_menu_text = HEALTH_FONT.render("Press SPACEBAR to start the game" , 1, MENU_WHITE)
+            bottom_menu_text = MENU_FONT.render("Press SPACEBAR to start the game" , 1, MENU_WHITE)
             bottom_menu_text_rect = bottom_menu_text.get_rect(center = (WIDTH // 2, HEIGHT - 40))
             SCREEN.blit(bottom_menu_text, bottom_menu_text_rect)
     

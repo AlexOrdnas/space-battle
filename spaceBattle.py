@@ -1,5 +1,4 @@
 import pygame
-from sys import exit
 
 pygame.init()
 WIDTH, HEIGHT = 900, 500
@@ -40,11 +39,12 @@ SHOOT_SOUND = pygame.mixer.Sound("sounds/laser_shoot_sfx.wav")
 SHOOT_SOUND.set_volume(0.5)
 HIT_SOUND = pygame.mixer.Sound("sounds/explosion_sfx.wav")
 HIT_SOUND.set_volume(0.5)
-WIN_SOUND = pygame.mixer.Sound("sounds/win_sfx.wav")
-WIN_SOUND.set_volume(1)
+WIN_MUSIC = pygame.mixer.Sound("sounds/win_sfx.wav")
+WIN_MUSIC.set_volume(5)
 BACKGROUND_MUSIC = pygame.mixer.Sound("sounds/background_music.wav")
 BACKGROUND_MUSIC.set_volume(0.2)
 BACKGROUND_MUSIC.play(-1)
+
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
     SCREEN.blit(SPACE, (0, 0))
@@ -139,7 +139,6 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-                exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
@@ -183,17 +182,17 @@ def main():
         if winner_text != "":
             if yellow_health <= 0:
                 BACKGROUND_MUSIC.stop()
-                WIN_SOUND.play()
+                WIN_MUSIC.play()
                 draw_winner_red(winner_text)
             
             if red_health <= 0:
                 BACKGROUND_MUSIC.stop()
-                WIN_SOUND.play()
+                WIN_MUSIC.play()
                 draw_winner_yellow(winner_text)
 
             if yellow_health <= 0 and red_health <= 0:
                 BACKGROUND_MUSIC.stop()
-                WIN_SOUND.play()
+                WIN_MUSIC.play()
                 draw_winner_green(winner_text)
             break
         
@@ -204,4 +203,5 @@ def main():
         handle_bullets(yellow_bullets, red_bullets, yellow, red)
 
         draw_window(red, yellow, red_bullets, yellow_bullets,red_health, yellow_health)
-    main()
+
+main()

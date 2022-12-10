@@ -4,7 +4,7 @@ pygame.init()
 WIDTH, HEIGHT = 900, 500
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Battle")
-iconImage = pygame.image.load("graphics/spaceIcon.ico").convert_alpha()
+iconImage = pygame.image.load("graphics/spaceBattleIcon.ico").convert_alpha()
 pygame.display.set_icon(iconImage)
 
 WHITE = (255, 255, 255)
@@ -18,13 +18,13 @@ MENU_BLUE = (51, 102, 153)
 
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
 
-HEALTH_FONT = pygame.font.Font("font/ARCADE.TTF", 40)
+HEALTH_FONT = pygame.font.Font("font/Arcade.TTF", 40)
 WINNER_FONT = pygame.font.Font("font/ARCADE.TTF", 150)
 MENU_FONT = pygame.font.Font("font/ARCADE.TTF", 50)
 
 FPS = 60
 VEL = 5
-BULLET_VEL = 12
+BULLET_VEL = 10
 MAX_BULLETS = 4
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 60, 40
 
@@ -53,11 +53,8 @@ WIN_MUSIC = pygame.mixer.Sound("sounds/win_sfx.wav")
 WIN_MUSIC.set_volume(5)
 
 BACKGROUND_MUSIC = pygame.mixer.Sound("sounds/background_music.wav")
-BACKGROUND_MUSIC.set_volume(0.1)
+BACKGROUND_MUSIC.set_volume(0.2)
 BACKGROUND_MUSIC.play(-1)
-
-MENU_MUSIC = pygame.mixer.Sound("sounds/menu_music.wav")
-MENU_MUSIC.set_volume(0.1)
 
 def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
     SCREEN.blit(SPACE, (0, 0))
@@ -146,22 +143,14 @@ def main():
 
     clock = pygame.time.Clock()  
     game_active = False
-    
-    '''
-    if game_active == True:    
-        MENU_MUSIC.stop()
-        BACKGROUND_MUSIC.play(-1)
-    else:
-        MENU_MUSIC.play(-1)
-    '''            
-    
+        
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
                                 
-            if game_active:
+            if game_active:    
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LCTRL and len(yellow_bullets) < MAX_BULLETS:
                         bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height//2 - 2, 10, 5)
@@ -176,25 +165,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         game_active = True
-                        pygame.time.delay(250)
-                
-                if game_active:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            pygame.quit()
-                            
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_r:
-                            main()
-                            
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_f:
-                            red_health = 10
-                            yellow_health = 10
-                            
-                    if event.type == pygame.KEYDOWN:    
-                        if event.key == pygame.K_m:
-                            game_active = False
+                        pygame.time.delay(100)
             
             if game_active:
                 if event.type == RED_HIT:
@@ -205,6 +176,13 @@ def main():
                     yellow_health -= 1
                     HIT_SOUND.play()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+
+                if event.key == pygame.K_r:
+                    main()
+                                            
         if game_active:
             winner_text = ""
             if red_health <= 0:
@@ -245,7 +223,7 @@ def main():
         else:
             SCREEN.fill(MENU_BLUE)
             
-            top_menu_text = MENU_FONT.render("Welcome to SPACE BATTLE" , 1, MENU_WHITE)
+            top_menu_text = MENU_FONT.render("Welcome to Space Battle" , 1, MENU_WHITE)
             top_menu_text_rect = top_menu_text.get_rect(center = (WIDTH // 2, 40))
             SCREEN.blit(top_menu_text, top_menu_text_rect)
 
